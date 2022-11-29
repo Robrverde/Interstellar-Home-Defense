@@ -32,7 +32,7 @@ public class MainActivity extends QuestActivity {
 
     Background360 background;
 
-    Level my_level;
+    LevelWorld my_level;
     Model earth;
     Model moon;
 
@@ -44,7 +44,7 @@ public class MainActivity extends QuestActivity {
 
 
 
-        my_level=new Level();
+        my_level=new LevelWorld();
         appendChild(my_level);
 
         //Make the earth
@@ -131,15 +131,18 @@ public class MainActivity extends QuestActivity {
         if(frame>1) {//FYI: In the first frame we do not have accurate globalTransform
             for (int i = 0; i < projectile.length; i++) {
                 Position p = projectile[i].globalTransform.getPosition();
-                for (int j = 0; j < my_level.segments.length; j++) {
-                    Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
-                    float d = p2.distance(p);
-                    if (p2.distance(p) < 0.2) {
+                for (int j = 0; j < my_level.LENGTH; j++) {
+                    //Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
+                    //float d = p2.distance(p);
+                    // REMOVE PROJECTILES ON SEGMENT CHANGE
+                   /* if (p2.distance(p) < 0.2) {
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
                         J4Q.rightController.vibrate(0.5f,0.5f,3000);
                         J4Q.rightController.vibrate(0.5f,0.5f,3000);
                     }
+
+                    */
                 }
             }
         }
