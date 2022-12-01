@@ -83,9 +83,14 @@ public class Level extends Model {
     @Override
     public void Update(){
 
+        //t+=2.5f*(J4Q.rightController.joystick.getY()+1)*(J4Q.leftController.joystick.getY()+1)*J4Q.activity.perSec();
 
-
-        t+=2.5f*(J4Q.rightController.joystick.getY()+1)*(J4Q.leftController.joystick.getY()+1)*J4Q.activity.perSec();
+        //Only move if the left joystick is pressed
+        if(J4Q.leftController.joystick.getX() < 0)
+            t-=2.5f*J4Q.activity.perSec();
+        else if(J4Q.leftController.joystick.getX() > 0)
+            t+=2.5f*J4Q.activity.perSec();
+        
 
         int i=(int)Math.floor(t/LevelSegment.LENGTH);
 

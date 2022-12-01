@@ -170,7 +170,10 @@ public class LevelSegment extends Model {
         this.orientation2 =new float[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
         System.arraycopy(this.orientation1,0,this.orientation2,0,16);
         Matrix.translateM(this.orientation2,0,0,0,-LENGTH);
-        float[] r =new float[]{(float)(2 * Math.random() - 1), (float)(2 * Math.random() - 1), 0};
+
+        //float[] r =new float[]{(float)(2 * Math.random() - 1), (float)(2 * Math.random() - 1), 0};
+        float[] r =new float[]{0, -1, 0};
+
         if (previous!=null) {
             r[0] += previous.rot[0];
             r[1] += previous.rot[1];
@@ -181,7 +184,9 @@ public class LevelSegment extends Model {
         r[0] /= m;
         r[1] /= m;
         r[2] /= m;
-        Matrix.rotateM(this.orientation2,0,180/20,r[0],r[1],r[2]);
+
+        //Matrix.rotateM(this.orientation2,0,180/20,r[0],r[1],r[2]);
+        Matrix.rotateM(this.orientation2,0,360/25f,r[0],r[1],r[2]);
 
 
         transform.identity();
