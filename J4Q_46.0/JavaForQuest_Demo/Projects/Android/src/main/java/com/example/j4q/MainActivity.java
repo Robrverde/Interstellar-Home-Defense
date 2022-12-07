@@ -1,6 +1,11 @@
 package com.example.j4q;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.view.SurfaceHolder;
 
 import edu.ufl.digitalworlds.j4q.J4Q;
 import edu.ufl.digitalworlds.j4q.activities.QuestActivity;
@@ -13,15 +18,91 @@ import edu.ufl.digitalworlds.j4q.shaders.ShadedTextureShader;
 import edu.ufl.digitalworlds.j4q.shaders.Texture;
 import edu.ufl.digitalworlds.j4q.models.Background360;
 
-public class MainActivity extends QuestActivity {
+public class MainActivity extends QuestActivity implements SurfaceHolder.Callback {
+
+    Paint white_text;
+
+    public int wave;
+    public long time;
+    private CountDownTimer countDownTimer;
+    public boolean timerStopped;
+    SurfaceHolder holder=null;
+
+    String timer="Time Remaining:";
+
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+            startTimer();
 
+            white_text=new Paint();
+            white_text.setColor(Color.WHITE);
+            white_text.setTextSize(100);
 
+        if (wave == 1) {
+            time = 5000;
+            startTimer();
+        }
     }
 
+    /** Starts the timer **/
+        public void startTimer() {
+            setTimerStartListener();
+            timerStopped = false;
+        }
 
+        /** Stop the timer **/
+        public void stopTimer() {
+            countDownTimer.cancel();
+            timerStopped = true;
+        }
+
+        /** Timer method: CountDownTimer **/
+        private void setTimerStartListener() {
+
+
+            // 24 hrs = 86400000 milliseconds.
+            // 1 hr = 3600000 milliseconds.
+            // 1 min = 60000 milliseconds.
+
+            if (wave == 1) {
+                // PHASE 2: Check if Critter is still thriving
+                countDownTimer = new CountDownTimer((time), 1000) {
+                    public void onTick(long time) {
+                        timer = "Time Remaining: " + time / 1000;
+                    }
+
+                    public void onFinish() {
+                        stopTimer();
+                        wave = 2;
+                    }
+                }.start();
+            }
+
+
+                /*
+            } else if (Critter != 0 && Phase == 0) {
+                // PHASE 1: Critter grows from a seed and into a critter.
+                countDownTimer = new CountDownTimer((time), 1000) {
+                    public void onTick(long time) {
+                        timeLeft.setText("Seconds remaining: " + time / 1000);
+                        remainingTime = time;
+                    }
+
+                    public void onFinish() {
+                        stopTimer();
+                        Phase = 1;
+                        time = 5000;
+                        spawnCheck();
+                    }
+                }.start();
+            }else {
+                spawnCheck();
+            }
+            */
+        }
+///////////////////////////////////////
     RightController rc;
     LeftController lc;
     RightSpaceship rs;
@@ -93,6 +174,9 @@ public class MainActivity extends QuestActivity {
     int frame=0;
 
     public  void Update(){
+        if(holder==null)return;
+        Canvas c=holder.lockCanvas();
+        c.drawText(timer, 20, c.getHeight()-20, white_text);
 
         frame+=1;
 
@@ -135,6 +219,7 @@ public class MainActivity extends QuestActivity {
                     Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
                     float d = p2.distance(p);
                     if (p2.distance(p) < 0.2) {
+                        //SCORE CHANGE
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
                         J4Q.rightController.vibrate(0.5f,0.5f,3000);
@@ -143,7 +228,6 @@ public class MainActivity extends QuestActivity {
                 }
             }
         }
-
 
 
     }
