@@ -88,9 +88,12 @@ public class Level extends Model {
 
         //Only move if the left joystick is pressed
         if(J4Q.leftController.joystick.getX() < 0)
-            t-=2.5f*J4Q.activity.perSec();
-        else if(J4Q.leftController.joystick.getX() > 0)
             t+=2.5f*J4Q.activity.perSec();
+        /*
+        else if(J4Q.leftController.joystick.getX() > 0)
+            t-=2.5f*J4Q.activity.perSec();
+            */
+
         
 
         int i=(int)Math.floor(t/LevelSegment.LENGTH);

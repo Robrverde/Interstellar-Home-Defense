@@ -134,7 +134,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         earth=om.flushShadedTexturedModel();
         ((ShadedTextureShader)earth.shader).setTexture(new Texture(this,"textures/earth_1024.jpg"));
         ((ShadedTextureShader)earth.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        appendChild(earth);
+        //appendChild(earth);
+        my_level.prependChild(earth);
         earth.transform.translate(-320,0,-20);
 
         //Make the moon
@@ -142,7 +143,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         moon=om.flushShadedTexturedModel();
         ((ShadedTextureShader)moon.shader).setTexture(new Texture(this,"textures/moon_1024.jpg"));
         ((ShadedTextureShader)moon.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        appendChild(moon);
+        //appendChild(moon);
+        my_level.prependChild(moon);
         moon.transform.translate(320,0,-20);
 
         background=new Background360();
@@ -174,9 +176,13 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     int frame=0;
 
     public  void Update(){
-        if(holder==null)return;
-        Canvas c=holder.lockCanvas();
-        c.drawText(timer, 20, c.getHeight()-20, white_text);
+
+        //Had to comment it out as it was breaking the projectiles
+       /*
+       if(holder==null)return;
+       Canvas c=holder.lockCanvas();
+       c.drawText(timer, 20, c.getHeight()-20, white_text);
+       */
 
         frame+=1;
 
@@ -218,18 +224,16 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 for (int j = 0; j < my_level.segments.length; j++) {
                     Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
                     float d = p2.distance(p);
-                    if (p2.distance(p) < 0.2) {
+                    if (p2.distance(p) < 1) {
                         //SCORE CHANGE
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
-                        J4Q.rightController.vibrate(0.5f,0.5f,3000);
-                        J4Q.rightController.vibrate(0.5f,0.5f,3000);
+                        //J4Q.rightController.vibrate(0.5f,0.5f,3000);
+                        //J4Q.leftController.vibrate(0.5f,0.5f,3000);
                     }
                 }
             }
         }
-
-
     }
 
 }
