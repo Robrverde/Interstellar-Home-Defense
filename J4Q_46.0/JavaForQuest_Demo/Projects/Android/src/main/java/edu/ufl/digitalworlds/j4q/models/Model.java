@@ -1,5 +1,7 @@
 package edu.ufl.digitalworlds.j4q.models;
 
+import com.example.j4q.MainActivity;
+
 import java.util.ArrayList;
 
 import edu.ufl.digitalworlds.j4q.geometry.Transform;
@@ -42,8 +44,11 @@ public class Model {
         }
     }
 
-    public void remove(){
-        if(parent!=null){
+    public void remove()
+    {
+        if(parent!=null)
+        {
+            MainActivity.high_score += 100;
             parent.removeChild(this);
         }
     }

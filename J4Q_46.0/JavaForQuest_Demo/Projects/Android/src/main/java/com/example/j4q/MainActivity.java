@@ -1,12 +1,13 @@
 package com.example.j4q;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
+import edu.ufl.digitalworlds.j4q.Audio;
 import edu.ufl.digitalworlds.j4q.J4Q;
 import edu.ufl.digitalworlds.j4q.activities.QuestActivity;
 import edu.ufl.digitalworlds.j4q.geometry.Position;
@@ -30,6 +31,10 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     String timer="Time Remaining:";
 
+    boolean wasLeftProjectileShot = false;
+    boolean wasRightProjectileShot = false;
+
+    public static int high_score = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -197,6 +202,9 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             projectile[next_projectile].transform.rotate(J4Q.rightController.aim.orientation);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
+
+            wasRightProjectileShot = true;
+
             if(next_projectile>=projectile.length)next_projectile=0;
         }
 
@@ -209,6 +217,9 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             projectile[next_projectile].transform.rotate(J4Q.leftController.aim.orientation);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
+
+            wasLeftProjectileShot = true;
+
             if(next_projectile>=projectile.length)next_projectile=0;
         }
 
@@ -228,12 +239,27 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                         //SCORE CHANGE
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
-                        //J4Q.rightController.vibrate(0.5f,0.5f,3000);
-                        //J4Q.leftController.vibrate(0.5f,0.5f,3000);
+
+                        //MAKE THE CONTROLLER THAT HIT THE ENEMY TO VIBRATE
+                        if(wasRightProjectileShot)
+                        {
+                            J4Q.rightController.vibrate(0.5f,0.5f,3000);
+                            wasRightProjectileShot = false;
+                            //high_score += 100;
+                            Log.d("debug", "high score: " + high_score);
+
+                        }
+                        else if(wasLeftProjectileShot)
+                        {
+                            J4Q.leftController.vibrate(0.5f,0.5f,3000);
+                            wasLeftProjectileShot = false;
+                            //high_score += 100;
+                            Log.d("debug", "high score: " + high_score);
+                        }
+
                     }
                 }
             }
         }
     }
-
 }
