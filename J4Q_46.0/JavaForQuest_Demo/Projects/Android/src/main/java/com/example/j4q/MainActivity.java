@@ -2,12 +2,13 @@ package com.example.j4q;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import edu.ufl.digitalworlds.j4q.Audio;
+import com.oculus.sdk.xrcompositor.R;
 import edu.ufl.digitalworlds.j4q.J4Q;
 import edu.ufl.digitalworlds.j4q.activities.QuestActivity;
 import edu.ufl.digitalworlds.j4q.geometry.Position;
@@ -35,6 +36,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     boolean wasRightProjectileShot = false;
 
     public static int high_score = 0;
+
+    MediaPlayer mp;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -205,6 +208,10 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
             wasRightProjectileShot = true;
 
+            //Play projectile sound effect
+            mp = MediaPlayer.create(this, R.raw.laser);
+            mp.start();
+
             if(next_projectile>=projectile.length)next_projectile=0;
         }
 
@@ -218,7 +225,23 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
 
+            //Set that the projectile was shot with left controller
             wasLeftProjectileShot = true;
+
+            //Play projectile sound effect
+            mp = MediaPlayer.create(this, R.raw.laser);
+            mp.start();
+
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+            {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.reset();
+                    mp.release();
+                    mp = null;
+                }
+            });
 
             if(next_projectile>=projectile.length)next_projectile=0;
         }
@@ -245,6 +268,22 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                         {
                             J4Q.rightController.vibrate(0.5f,0.5f,3000);
                             wasRightProjectileShot = false;
+
+                            /*//Play destruction sound effect
+                            mp = MediaPlayer.create(this, R.raw.destroyed);
+                            mp.start();
+
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+                            {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    // TODO Auto-generated method stub
+                                    mp.reset();
+                                    mp.release();
+                                    mp = null;
+                                }
+                            });*/
+
                             //high_score += 100;
                             Log.d("debug", "high score: " + high_score);
 
@@ -253,6 +292,22 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                         {
                             J4Q.leftController.vibrate(0.5f,0.5f,3000);
                             wasLeftProjectileShot = false;
+
+                            //Play destruction sound effect
+                            /*mp = MediaPlayer.create(this, R.raw.destroyed);
+                            mp.start();
+
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+                            {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    // TODO Auto-generated method stub
+                                    mp.reset();
+                                    mp.release();
+                                    mp = null;
+                                }
+                            });*/
+
                             //high_score += 100;
                             Log.d("debug", "high score: " + high_score);
                         }
@@ -262,4 +317,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             }
         }
     }
+
+
 }
