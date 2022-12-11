@@ -9,14 +9,16 @@ public class ShadedTextureShader extends Shader {
     public ShadedTextureShader() {
         super(
 
+                "#version 300 es\n"+
                         "uniform SceneMatrices\n"+
                         "{\n"+
                         "	uniform mat4 ViewMatrix;\n"+
                         "	uniform mat4 ProjectionMatrix;\n"+
-                                "uniform mat3 NormalMatrix;\n"+
-                        "   uniform vec3 uLightDir;\n"+
+                                "uniform mat4 NormalMatrix;\n"+
+                        "   uniform vec4 uLightDir;\n"+
                         "} sm;\n"+
-                        "uniform mat4 localTransform;\n"+
+                        "uniform mat4 modelMatrix;\n"+
+                        "uniform mat4 normalMatrix;\n"+
 
                         "in vec3 aPosition;\n"+
                         "in vec2 aUV;" +
@@ -28,22 +30,23 @@ public class ShadedTextureShader extends Shader {
 
                         "void main()\n"+
                         "{\n"+
-                                "lightDir=sm.NormalMatrix*sm.uLightDir;"+
+                                "lightDir=mat3(sm.NormalMatrix)*vec3(sm.uLightDir);"+
                         "vUV=aUV;"+
-                        " vec4 tN=normalize(localTransform *vec4(aNormal,0.0));" +
-                        "vNormal=normalize(sm.NormalMatrix*vec3(tN.x,tN.y,tN.z));"+
-                                "vec4 p=sm.ViewMatrix *localTransform*  vec4( aPosition , 1.0 );"+
+                        " vNormal=normalize(mat3(sm.NormalMatrix*normalMatrix)*aNormal);" +
+                                "vec4 p=sm.ViewMatrix *modelMatrix*  vec4( aPosition , 1.0 );"+
                         "	gl_Position = sm.ProjectionMatrix * p;\n"+
                                 "vE=normalize(vec3(p));"+
                                 "}\n",
 
 
-                        "uniform SceneMatrices\n"+
+                "#version 300 es\n"+
+                        "precision mediump float;\n" +
+                                "uniform SceneMatrices\n"+
                         "{\n"+
                         "	uniform mat4 ViewMatrix;\n"+
                         "	uniform mat4 ProjectionMatrix;\n"+
-                                "uniform mat3 NormalMatrix;\n"+
-                        "   uniform vec3 uLightDir;\n"+
+                                "uniform mat4 NormalMatrix;\n"+
+                        "   uniform vec4 uLightDir;\n"+
                         "} sm;\n"+
                         "in lowp vec2 vUV;\n"+
                         "in vec3 vNormal;"+
@@ -68,7 +71,7 @@ public class ShadedTextureShader extends Shader {
                         "vec4 color=texture(uTexture, vUV);"+
                                 "shade=color*shade;"+
                         "  outColor = shade;" +
-                        "}\n",new String[]{"aPosition","aUV","aNormal"});
+                        "}\n",new String[]{"aPosition","aNormal","aUV"});
         setAmbientColor(new float[]{0.3f,0.3f,0.3f});
         setDiffuseColor(new float[]{0.7f,0.7f,0.7f});
         setSpecularColor(new float[]{0.5f,0.5f,0.5f});
@@ -120,7 +123,7 @@ public class ShadedTextureShader extends Shader {
             //shader.setUniformInteger("uTexture", texture.slot);
             GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + texture.slot);
             // Bind the texture to this unit.
-            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture.data);
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture.gles_handle);
         }
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, mesh.triangleLength, GLES30.GL_UNSIGNED_SHORT,0);
         GLES30.glBindVertexArray( 0 );

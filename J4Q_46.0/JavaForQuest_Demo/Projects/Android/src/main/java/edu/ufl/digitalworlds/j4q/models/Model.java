@@ -1,5 +1,7 @@
 package edu.ufl.digitalworlds.j4q.models;
 
+import android.opengl.Matrix;
+
 import com.example.j4q.MainActivity;
 
 import java.util.ArrayList;
@@ -44,10 +46,8 @@ public class Model {
         }
     }
 
-    public void remove()
-    {
-        if(parent!=null)
-        {
+    public void remove(){
+        if(parent!=null){
             MainActivity.high_score += 100;
             parent.removeChild(this);
         }
@@ -78,13 +78,18 @@ public class Model {
             transform.resetModifiedFlag();
             if(shader!=null) {
                 shader.use();
-                shader.setUniformMat4("localTransform", globalTransform.matrix);
+                Transform t=new Transform(globalTransform.matrix);
+                shader.setUniformMat4("modelMatrix", t.matrix);
+                shader.setUniformMat4("normalMatrix", t.getNormalMatrix());
             }
         }
     }
 
     public void setShader(Shader s){
         shader=s;
+        for (Model model : children) {
+            model.setShader(s);
+        }
     }
 
     public void simulate(double elapsedDisplayTime, double perSec){};

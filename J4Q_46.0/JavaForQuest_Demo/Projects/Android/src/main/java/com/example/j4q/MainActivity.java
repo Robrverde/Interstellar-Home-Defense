@@ -17,6 +17,7 @@ import edu.ufl.digitalworlds.j4q.models.Model;
 import edu.ufl.digitalworlds.j4q.models.ObjectMaker;
 import edu.ufl.digitalworlds.j4q.models.RightController;
 import edu.ufl.digitalworlds.j4q.shaders.ShadedTextureShader;
+import edu.ufl.digitalworlds.j4q.shaders.Text;
 import edu.ufl.digitalworlds.j4q.shaders.Texture;
 import edu.ufl.digitalworlds.j4q.models.Background360;
 
@@ -31,6 +32,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     SurfaceHolder holder=null;
 
     String timer="Time Remaining:";
+    String score = "Score: ";
 
     boolean wasLeftProjectileShot = false;
     boolean wasRightProjectileShot = false;
@@ -124,17 +126,20 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     Level my_level;
     Model earth;
     Model moon;
+    Model timer_rect;
+    Model score_rect;
+
+    Text timer_text;
+    Text score_text;
 
     public void Start(){
 
-        background(153/255f,	204/255f,	255/255f);
-        setLightDir(-0.5f,0.5f,-0.5f);
-
-
+        scene.background(153/255f,	204/255f,	255/255f);
+        scene.setLightDir(-0.5f,0.5f,-0.5f);
 
 
         my_level=new Level();
-        appendChild(my_level);
+        scene.appendChild(my_level);
 
         //Make the earth
         ObjectMaker om=new ObjectMaker();
@@ -155,15 +160,33 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         my_level.prependChild(moon);
         moon.transform.translate(320,0,-20);
 
+        //Make rectangle for the timer
+        om.rectangle(500, 25);
+        timer_rect = om.flushShadedTexturedModel();
+        timer_text =new Text(500,25);//size of the texture in pixels
+        timer_text.setText(timer);
+        ((ShadedTextureShader) timer_rect.shader).setTexture(timer_text);
+        my_level.prependChild(timer_rect);
+        timer_rect.transform.translate(200, 40, -400);
+
+        //Make rectangle for the score
+        om.rectangle(500, 25);
+        score_rect = om.flushShadedTexturedModel();
+        score_text =new Text(500,25);//size of the texture in pixels
+        score_text.setText(score);
+        ((ShadedTextureShader) score_rect.shader).setTexture(score_text);
+        my_level.prependChild(score_rect);
+        score_rect.transform.translate(200, 0, -400);
+
         background=new Background360();
         background.setTexture(new Texture(this,"textures/eso0932a.jpg"));
         my_level.prependChild(background);
 
         rs=new RightSpaceship();
-        appendChild(rs);
+        scene.appendChild(rs);
 
         ls=new LeftSpaceship();
-        appendChild(ls);
+        scene.appendChild(ls);
 
         //rc=new RightController();
         //appendChild(rc);
@@ -176,7 +199,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             om.color(1,0,0);
             om.cylinderZ(0.02f, 0.02f, 0.2f,8);
             projectile[i] = om.flushShadedColoredModel();
-            appendChild(projectile[i]);
+            scene.appendChild(projectile[i]);
         }
 
     }
@@ -191,6 +214,10 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
        Canvas c=holder.lockCanvas();
        c.drawText(timer, 20, c.getHeight()-20, white_text);
        */
+
+        //t.setText(timer + " " + Integer.toString(high_score));
+        timer_text.setText(timer);
+        score_text.setText(score + high_score);
 
         frame+=1;
 
@@ -248,7 +275,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
         //Animate all projectiles
         for(int i=0;i<projectile.length;i++)
-            projectile[i].transform.translate(0,0,-20f*perSec());
+            projectile[i].transform.translate(0,0,-20f*scene.perSec());
 
 
         //Check collision between projectiles and spaceships
@@ -284,8 +311,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                                 }
                             });*/
 
-                            //high_score += 100;
-                            Log.d("debug", "high score: " + high_score);
 
                         }
                         else if(wasLeftProjectileShot)
@@ -308,8 +333,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                                 }
                             });*/
 
-                            //high_score += 100;
-                            Log.d("debug", "high score: " + high_score);
                         }
 
                     }
