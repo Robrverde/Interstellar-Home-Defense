@@ -39,7 +39,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     public static int high_score = 0;
 
-    MediaPlayer mp;
+    //MediaPlayer mp;
+    SoundPlayer soundPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -49,6 +50,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             white_text=new Paint();
             white_text.setColor(Color.WHITE);
             white_text.setTextSize(100);
+
+            soundPlayer = new SoundPlayer(this);
 
         if (wave == 1) {
             time = 5000;
@@ -236,8 +239,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             wasRightProjectileShot = true;
 
             //Play projectile sound effect
-            mp = MediaPlayer.create(this, R.raw.laser);
-            mp.start();
+            soundPlayer.playProjectileSound();
 
             if(next_projectile>=projectile.length)next_projectile=0;
         }
@@ -256,19 +258,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             wasLeftProjectileShot = true;
 
             //Play projectile sound effect
-            mp = MediaPlayer.create(this, R.raw.laser);
-            mp.start();
-
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-            {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    // TODO Auto-generated method stub
-                    mp.reset();
-                    mp.release();
-                    mp = null;
-                }
-            });
+            soundPlayer.playProjectileSound();
 
             if(next_projectile>=projectile.length)next_projectile=0;
         }
@@ -296,22 +286,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                             J4Q.rightController.vibrate(0.5f,0.5f,3000);
                             wasRightProjectileShot = false;
 
-                            /*//Play destruction sound effect
-                            mp = MediaPlayer.create(this, R.raw.destroyed);
-                            mp.start();
-
-                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-                            {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    // TODO Auto-generated method stub
-                                    mp.reset();
-                                    mp.release();
-                                    mp = null;
-                                }
-                            });*/
-
-
+                            //Play destruction sound effect
+                            soundPlayer.playEnemyDestroyedSound();
                         }
                         else if(wasLeftProjectileShot)
                         {
@@ -319,19 +295,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                             wasLeftProjectileShot = false;
 
                             //Play destruction sound effect
-                            /*mp = MediaPlayer.create(this, R.raw.destroyed);
-                            mp.start();
+                            soundPlayer.playEnemyDestroyedSound();
 
-                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-                            {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    // TODO Auto-generated method stub
-                                    mp.reset();
-                                    mp.release();
-                                    mp = null;
-                                }
-                            });*/
 
                         }
 
