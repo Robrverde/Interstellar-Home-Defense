@@ -36,8 +36,8 @@ public class LevelSegment extends Model {
 
         spaceship=new Spaceship((int)Math.floor(Math.random()*Spaceship.TYPES));
         appendChild(spaceship);
-        spaceship.transform.translate((float)(Math.random()*6-3),2.5f,0);
-        spaceship.transform.scale(0.2f);
+        spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+        spaceship.transform.scale(1);
         spaceship.transform.rotateY(180);
     }
 
@@ -140,11 +140,12 @@ public class LevelSegment extends Model {
             for(int i=0;i<20;i++){
                 om.save();
                 om.rotateZ((float)(Math.random()*360));
-                om.translate(0,(float)(8+Math.random()*8),(float)(Math.random()*LENGTH-LENGTH/2));
-                om.rotateY((float)(Math.random()*360));
-                om.rotateX((float)(Math.random()*180));
-                om.scale((float)(Math.random()*0.5+0.5));
-                om.sphere(1,1,1,5);
+                om.translate(50,0, 10);
+                //om.translate(10,(float)(8+Math.random()*1),(float)(Math.random()*LENGTH-LENGTH/2));
+                //om.rotateY((float)(Math.random()*360));
+                //om.rotateX((float)(Math.random()*180));
+                om.scale((float)(Math.random()*1+0.5));
+                om.sphere(2,1,2,5);
                 om.restore();
             }
             planets=om.flushShadedTexturedModel();
@@ -224,16 +225,16 @@ public class LevelSegment extends Model {
         level.path_maker.appendUV(this.level.uv);
 
 
-        buildSides();
-        buildPlanets();
+        //buildSides();
+        //buildPlanets();
 
         //reposition spaceship
         if(spaceship.getParent()==null) {
             appendChild(spaceship);
         }
         spaceship.transform.identity();
-        spaceship.transform.translate((float)(Math.random()*6-3),2.5f,0);
-        spaceship.transform.scale(0.2f);
+        spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+        spaceship.transform.scale(1);
         spaceship.transform.rotateY(180);
 
 

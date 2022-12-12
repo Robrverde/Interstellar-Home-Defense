@@ -81,7 +81,7 @@ public class LevelWorld extends Model {
     @Override
     public void Update(){
 
-        t+=2.5f*(J4Q.rightController.joystick.getY()+1)*(J4Q.leftController.joystick.getY()+1)*J4Q.activity.perSec();
+        t+=2.5f*(J4Q.rightController.joystick.getY()+1)*(J4Q.leftController.joystick.getY()+1)*J4Q.perSec();
 
 
         transform.identity();

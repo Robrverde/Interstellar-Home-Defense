@@ -1,7 +1,14 @@
 package com.example.j4q;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.SurfaceHolder;
 
+import com.oculus.sdk.xrcompositor.R;
 import edu.ufl.digitalworlds.j4q.J4Q;
 import edu.ufl.digitalworlds.j4q.activities.QuestActivity;
 import edu.ufl.digitalworlds.j4q.geometry.Position;
@@ -10,18 +17,102 @@ import edu.ufl.digitalworlds.j4q.models.Model;
 import edu.ufl.digitalworlds.j4q.models.ObjectMaker;
 import edu.ufl.digitalworlds.j4q.models.RightController;
 import edu.ufl.digitalworlds.j4q.shaders.ShadedTextureShader;
+import edu.ufl.digitalworlds.j4q.shaders.Text;
 import edu.ufl.digitalworlds.j4q.shaders.Texture;
 import edu.ufl.digitalworlds.j4q.models.Background360;
 
-public class MainActivity extends QuestActivity {
+public class MainActivity extends QuestActivity implements SurfaceHolder.Callback {
+
+    Paint white_text;
+
+    public int wave;
+    public long time;
+    private CountDownTimer countDownTimer;
+    public boolean timerStopped;
+    SurfaceHolder holder=null;
+
+    String timer="Time Remaining:";
+    String score = "Score: ";
+
+    boolean wasLeftProjectileShot = false;
+    boolean wasRightProjectileShot = false;
+
+    public static int high_score = 0;
+
+    MediaPlayer mp;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+            startTimer();
 
+            white_text=new Paint();
+            white_text.setColor(Color.WHITE);
+            white_text.setTextSize(100);
 
+        if (wave == 1) {
+            time = 5000;
+            startTimer();
+        }
     }
 
+    /** Starts the timer **/
+        public void startTimer() {
+            setTimerStartListener();
+            timerStopped = false;
+        }
 
+        /** Stop the timer **/
+        public void stopTimer() {
+            countDownTimer.cancel();
+            timerStopped = true;
+        }
+
+        /** Timer method: CountDownTimer **/
+        private void setTimerStartListener() {
+
+
+            // 24 hrs = 86400000 milliseconds.
+            // 1 hr = 3600000 milliseconds.
+            // 1 min = 60000 milliseconds.
+
+            if (wave == 1) {
+                // PHASE 2: Check if Critter is still thriving
+                countDownTimer = new CountDownTimer((time), 1000) {
+                    public void onTick(long time) {
+                        timer = "Time Remaining: " + time / 1000;
+                    }
+
+                    public void onFinish() {
+                        stopTimer();
+                        wave = 2;
+                    }
+                }.start();
+            }
+
+
+                /*
+            } else if (Critter != 0 && Phase == 0) {
+                // PHASE 1: Critter grows from a seed and into a critter.
+                countDownTimer = new CountDownTimer((time), 1000) {
+                    public void onTick(long time) {
+                        timeLeft.setText("Seconds remaining: " + time / 1000);
+                        remainingTime = time;
+                    }
+
+                    public void onFinish() {
+                        stopTimer();
+                        Phase = 1;
+                        time = 5000;
+                        spawnCheck();
+                    }
+                }.start();
+            }else {
+                spawnCheck();
+            }
+            */
+        }
+///////////////////////////////////////
     RightController rc;
     LeftController lc;
     RightSpaceship rs;
@@ -35,17 +126,20 @@ public class MainActivity extends QuestActivity {
     Level my_level;
     Model earth;
     Model moon;
+    Model timer_rect;
+    Model score_rect;
+
+    Text timer_text;
+    Text score_text;
 
     public void Start(){
 
-        background(153/255f,	204/255f,	255/255f);
-        setLightDir(-0.5f,0.5f,-0.5f);
-
-
+        scene.background(153/255f,	204/255f,	255/255f);
+        scene.setLightDir(-0.5f,0.5f,-0.5f);
 
 
         my_level=new Level();
-        appendChild(my_level);
+        scene.appendChild(my_level);
 
         //Make the earth
         ObjectMaker om=new ObjectMaker();
@@ -53,7 +147,8 @@ public class MainActivity extends QuestActivity {
         earth=om.flushShadedTexturedModel();
         ((ShadedTextureShader)earth.shader).setTexture(new Texture(this,"textures/earth_1024.jpg"));
         ((ShadedTextureShader)earth.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        appendChild(earth);
+        //appendChild(earth);
+        my_level.prependChild(earth);
         earth.transform.translate(-320,0,-20);
 
         //Make the moon
@@ -61,18 +156,37 @@ public class MainActivity extends QuestActivity {
         moon=om.flushShadedTexturedModel();
         ((ShadedTextureShader)moon.shader).setTexture(new Texture(this,"textures/moon_1024.jpg"));
         ((ShadedTextureShader)moon.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        appendChild(moon);
+        //appendChild(moon);
+        my_level.prependChild(moon);
         moon.transform.translate(320,0,-20);
+
+        //Make rectangle for the timer
+        om.rectangle(500, 25);
+        timer_rect = om.flushShadedTexturedModel();
+        timer_text =new Text(500,25);//size of the texture in pixels
+        timer_text.setText(timer);
+        ((ShadedTextureShader) timer_rect.shader).setTexture(timer_text);
+        my_level.prependChild(timer_rect);
+        timer_rect.transform.translate(200, 40, -400);
+
+        //Make rectangle for the score
+        om.rectangle(500, 25);
+        score_rect = om.flushShadedTexturedModel();
+        score_text =new Text(500,25);//size of the texture in pixels
+        score_text.setText(score);
+        ((ShadedTextureShader) score_rect.shader).setTexture(score_text);
+        my_level.prependChild(score_rect);
+        score_rect.transform.translate(200, 0, -400);
 
         background=new Background360();
         background.setTexture(new Texture(this,"textures/eso0932a.jpg"));
         my_level.prependChild(background);
 
         rs=new RightSpaceship();
-        appendChild(rs);
+        scene.appendChild(rs);
 
         ls=new LeftSpaceship();
-        appendChild(ls);
+        scene.appendChild(ls);
 
         //rc=new RightController();
         //appendChild(rc);
@@ -85,7 +199,7 @@ public class MainActivity extends QuestActivity {
             om.color(1,0,0);
             om.cylinderZ(0.02f, 0.02f, 0.2f,8);
             projectile[i] = om.flushShadedColoredModel();
-            appendChild(projectile[i]);
+            scene.appendChild(projectile[i]);
         }
 
     }
@@ -93,6 +207,17 @@ public class MainActivity extends QuestActivity {
     int frame=0;
 
     public  void Update(){
+
+        //Had to comment it out as it was breaking the projectiles
+       /*
+       if(holder==null)return;
+       Canvas c=holder.lockCanvas();
+       c.drawText(timer, 20, c.getHeight()-20, white_text);
+       */
+
+        //t.setText(timer + " " + Integer.toString(high_score));
+        timer_text.setText(timer);
+        score_text.setText(score + high_score);
 
         frame+=1;
 
@@ -107,6 +232,13 @@ public class MainActivity extends QuestActivity {
             projectile[next_projectile].transform.rotate(J4Q.rightController.aim.orientation);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
+
+            wasRightProjectileShot = true;
+
+            //Play projectile sound effect
+            mp = MediaPlayer.create(this, R.raw.laser);
+            mp.start();
+
             if(next_projectile>=projectile.length)next_projectile=0;
         }
 
@@ -119,12 +251,31 @@ public class MainActivity extends QuestActivity {
             projectile[next_projectile].transform.rotate(J4Q.leftController.aim.orientation);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
+
+            //Set that the projectile was shot with left controller
+            wasLeftProjectileShot = true;
+
+            //Play projectile sound effect
+            mp = MediaPlayer.create(this, R.raw.laser);
+            mp.start();
+
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+            {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.reset();
+                    mp.release();
+                    mp = null;
+                }
+            });
+
             if(next_projectile>=projectile.length)next_projectile=0;
         }
 
         //Animate all projectiles
         for(int i=0;i<projectile.length;i++)
-            projectile[i].transform.translate(0,0,-20f*perSec());
+            projectile[i].transform.translate(0,0,-20f*scene.perSec());
 
 
         //Check collision between projectiles and spaceships
@@ -134,18 +285,61 @@ public class MainActivity extends QuestActivity {
                 for (int j = 0; j < my_level.segments.length; j++) {
                     Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
                     float d = p2.distance(p);
-                    if (p2.distance(p) < 0.2) {
+                    if (p2.distance(p) < 1) {
+                        //SCORE CHANGE
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
-                        J4Q.rightController.vibrate(0.5f,0.5f,3000);
-                        J4Q.rightController.vibrate(0.5f,0.5f,3000);
+
+                        //MAKE THE CONTROLLER THAT HIT THE ENEMY TO VIBRATE
+                        if(wasRightProjectileShot)
+                        {
+                            J4Q.rightController.vibrate(0.5f,0.5f,3000);
+                            wasRightProjectileShot = false;
+
+                            /*//Play destruction sound effect
+                            mp = MediaPlayer.create(this, R.raw.destroyed);
+                            mp.start();
+
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+                            {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    // TODO Auto-generated method stub
+                                    mp.reset();
+                                    mp.release();
+                                    mp = null;
+                                }
+                            });*/
+
+
+                        }
+                        else if(wasLeftProjectileShot)
+                        {
+                            J4Q.leftController.vibrate(0.5f,0.5f,3000);
+                            wasLeftProjectileShot = false;
+
+                            //Play destruction sound effect
+                            /*mp = MediaPlayer.create(this, R.raw.destroyed);
+                            mp.start();
+
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+                            {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    // TODO Auto-generated method stub
+                                    mp.reset();
+                                    mp.release();
+                                    mp = null;
+                                }
+                            });*/
+
+                        }
+
                     }
                 }
             }
         }
-
-
-
     }
+
 
 }
