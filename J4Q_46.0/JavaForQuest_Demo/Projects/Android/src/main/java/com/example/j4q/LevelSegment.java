@@ -287,6 +287,7 @@ public class LevelSegment extends Model {
             //float d = p.distance(p);
             if (frame > 1200 && spaceship != null) {
                 spaceship.transform.identity();
+                spaceship.transform.rotateY(180);
                 spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
                 spaceship.transform.scale(+1);
                 frame = 0;

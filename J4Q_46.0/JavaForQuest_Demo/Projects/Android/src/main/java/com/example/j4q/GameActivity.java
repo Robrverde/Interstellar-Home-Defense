@@ -21,7 +21,7 @@ import edu.ufl.digitalworlds.j4q.shaders.Text;
 import edu.ufl.digitalworlds.j4q.shaders.Texture;
 import edu.ufl.digitalworlds.j4q.models.Background360;
 
-public class MainActivity extends QuestActivity implements SurfaceHolder.Callback {
+public class GameActivity extends QuestActivity implements SurfaceHolder.Callback {
 
     Paint white_text;
 
@@ -46,13 +46,13 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-            //startTimer();
+        //startTimer();
 
-            white_text=new Paint();
-            white_text.setColor(Color.WHITE);
-            white_text.setTextSize(100);
+        white_text=new Paint();
+        white_text.setColor(Color.WHITE);
+        white_text.setTextSize(100);
 
-            soundPlayer = new SoundPlayer(this);
+        soundPlayer = new SoundPlayer(this);
 
         if (wave == 1) {
             time = 20000;
@@ -61,38 +61,38 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     }
 
     /** Starts the timer **/
-        public void startTimer() {
-            setTimerStartListener();
-            timerStopped = false;
+    public void startTimer() {
+        setTimerStartListener();
+        timerStopped = false;
+    }
+
+    /** Stop the timer **/
+    public void stopTimer() {
+        countDownTimer.cancel();
+        timerStopped = true;
+    }
+
+    /** Timer method: CountDownTimer **/
+    private void setTimerStartListener() {
+
+
+        // 24 hrs = 86400000 milliseconds.
+        // 1 hr = 3600000 milliseconds.
+        // 1 min = 60000 milliseconds.
+
+        if (wave == 1) {
+            // PHASE 2: Check if Critter is still thriving
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+                }
+
+                public void onFinish() {
+                    wave = 2;
+                    stopTimer();
+                }
+            }.start();
         }
-
-        /** Stop the timer **/
-        public void stopTimer() {
-            countDownTimer.cancel();
-            timerStopped = true;
-        }
-
-        /** Timer method: CountDownTimer **/
-        private void setTimerStartListener() {
-
-
-            // 24 hrs = 86400000 milliseconds.
-            // 1 hr = 3600000 milliseconds.
-            // 1 min = 60000 milliseconds.
-
-            if (wave == 1) {
-                // PHASE 2: Check if Critter is still thriving
-                countDownTimer = new CountDownTimer((time), 1000) {
-                    public void onTick(long time) {
-                        timeLeft = time / 1000;
-                    }
-
-                    public void onFinish() {
-                        wave = 2;
-                        stopTimer();
-                    }
-                }.start();
-            }
 
 
                 /*
@@ -115,8 +115,8 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 spawnCheck();
             }
             */
-        }
-///////////////////////////////////////
+    }
+    ///////////////////////////////////////
     RightController rc;
     LeftController lc;
     RightSpaceship rs;
