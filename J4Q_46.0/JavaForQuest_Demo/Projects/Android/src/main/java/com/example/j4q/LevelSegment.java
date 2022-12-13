@@ -3,6 +3,7 @@ package com.example.j4q;
 import android.opengl.Matrix;
 
 import edu.ufl.digitalworlds.j4q.J4Q;
+import edu.ufl.digitalworlds.j4q.geometry.Position;
 import edu.ufl.digitalworlds.j4q.models.Mesh;
 import edu.ufl.digitalworlds.j4q.models.Model;
 import edu.ufl.digitalworlds.j4q.models.ObjectMaker;
@@ -37,7 +38,7 @@ public class LevelSegment extends Model {
         spaceship=new Spaceship((int)Math.floor(Math.random()*Spaceship.TYPES));
         appendChild(spaceship);
         spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
-        spaceship.transform.scale(1);
+        spaceship.transform.scale(2);
         spaceship.transform.rotateY(180);
     }
 
@@ -234,7 +235,7 @@ public class LevelSegment extends Model {
         }
         spaceship.transform.identity();
         spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
-        spaceship.transform.scale(1);
+        spaceship.transform.scale(2);
         spaceship.transform.rotateY(180);
 
 
@@ -270,12 +271,27 @@ public class LevelSegment extends Model {
 
     }
 
+    int frame = 0;
+
     @Override
     public void Update(){
 
-        if(planets!=null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
+        frame += 1;
 
-        if(spaceship!=null)spaceship.transform.translate(0,0,-1.5f*J4Q.perSec());
+        if(planets != null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
+
+        if(spaceship != null)spaceship.transform.translate(0,0,-3*J4Q.perSec());
+
+        if (frame > 1) {//FYI: In the first frame we do not have accurate globalTransform
+            //Position p = spaceship.globalTransform.getPosition();
+            //float d = p.distance(p);
+            if (frame > 1200 && spaceship != null) {
+                spaceship.transform.identity();
+                spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+                spaceship.transform.scale(+1);
+                frame = 0;
+            }
+        }
 
 
     }

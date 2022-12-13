@@ -25,27 +25,28 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     Paint white_text;
 
-    public int wave;
-    public long time;
+    public int wave = 1;
+    public long time = 0;
     private CountDownTimer countDownTimer;
     public boolean timerStopped;
     SurfaceHolder holder=null;
 
-    String timer="Time Remaining:";
+    String timer="Time Remaining: ";
     String score = "Score: ";
 
     boolean wasLeftProjectileShot = false;
     boolean wasRightProjectileShot = false;
 
     public static int high_score = 0;
+    public static long timeLeft = 0;
 
     //MediaPlayer mp;
-    SoundPlayer soundPlayer;
+    public static SoundPlayer soundPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-            startTimer();
+            //startTimer();
 
             white_text=new Paint();
             white_text.setColor(Color.WHITE);
@@ -54,7 +55,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             soundPlayer = new SoundPlayer(this);
 
         if (wave == 1) {
-            time = 5000;
+            time = 20000;
             startTimer();
         }
     }
@@ -83,12 +84,12 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 // PHASE 2: Check if Critter is still thriving
                 countDownTimer = new CountDownTimer((time), 1000) {
                     public void onTick(long time) {
-                        timer = "Time Remaining: " + time / 1000;
+                        timeLeft = time / 1000;
                     }
 
                     public void onFinish() {
-                        stopTimer();
                         wave = 2;
+                        stopTimer();
                     }
                 }.start();
             }
@@ -219,7 +220,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
        */
 
         //t.setText(timer + " " + Integer.toString(high_score));
-        timer_text.setText(timer);
+        timer_text.setText(timer + timeLeft);
         score_text.setText(score + high_score);
 
         frame+=1;
@@ -275,7 +276,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 for (int j = 0; j < my_level.segments.length; j++) {
                     Position p2 = my_level.segments[j].spaceship.globalTransform.getPosition();
                     float d = p2.distance(p);
-                    if (p2.distance(p) < 1) {
+                    if (p2.distance(p) < 2) {
                         //SCORE CHANGE
                         my_level.segments[j].spaceship.remove();
                         projectile[i].hide();
@@ -285,19 +286,11 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                         {
                             J4Q.rightController.vibrate(0.5f,0.5f,3000);
                             wasRightProjectileShot = false;
-
-                            //Play destruction sound effect
-                            soundPlayer.playEnemyDestroyedSound();
                         }
                         else if(wasLeftProjectileShot)
                         {
                             J4Q.leftController.vibrate(0.5f,0.5f,3000);
                             wasLeftProjectileShot = false;
-
-                            //Play destruction sound effect
-                            soundPlayer.playEnemyDestroyedSound();
-
-
                         }
 
                     }

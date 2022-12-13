@@ -49,6 +49,9 @@ public class Model {
     public void remove(){
         if(parent!=null){
             MainActivity.high_score += 100;
+
+            //Play destruction sound effect
+            MainActivity.soundPlayer.playEnemyDestroyedSound();
             parent.removeChild(this);
         }
     }
