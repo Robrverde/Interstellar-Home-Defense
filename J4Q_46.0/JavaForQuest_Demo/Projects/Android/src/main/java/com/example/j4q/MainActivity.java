@@ -60,7 +60,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         soundPlayer = new SoundPlayer(this);
 
         if (wave == 0) {
-            time = 20000;
+            time = 10000;
             startTimer();
         }
     }
@@ -93,7 +93,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 public void onFinish() {
                     stopTimer();
                     wave = 1;
-                    time = 20000;
+                    time = 15000;
                     startTimer();
 
                 }

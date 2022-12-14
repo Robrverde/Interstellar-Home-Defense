@@ -269,35 +269,42 @@ public class LevelSegment extends Model {
     }
 
     int frame = 0;
+    int enemyLocation = 0;
 
     @Override
     public void Update(){
 
-        if(MainActivity.wave > 0)
-        {
-            if(MainActivity.wave == 1){
-                frame += 1;
-            }else{
-                if(spaceship != null)spaceship.transform.translate(100,100,100);
+        if(MainActivity.wave > 0) {
+            if(enemyLocation == 1) {
+                enemyLocation = 2;
+                spaceship.transform.translate(-200, -200, -200);
             }
+            frame += 1;
+        } else if(MainActivity.wave == 0 & enemyLocation == 0){
+            enemyLocation = 1;
+            spaceship.transform.translate(200,200,200);
+        }
 
             //if(planets != null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
 
 
 
             if (frame > 1) {//FYI: In the first frame we do not have accurate globalTransform
-                if(spaceship != null)spaceship.transform.translate(0,0,-3*J4Q.perSec());
+                if(spaceship != null){
+                    spaceship.transform.translate(0,0,-3*J4Q.perSec());
+                }
                 //Position p = spaceship.globalTransform.getPosition();
                 //float d = p.distance(p);
 
-                if (frame > 1200 && spaceship != null) {
+                if (frame > 1000 && spaceship != null) {
+
                     spaceship.transform.identity();
-                    spaceship.transform.rotateY(180);
                     spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+                    spaceship.transform.rotateY(180);
                     spaceship.transform.scale(+1);
-                    frame = 0;
+                    frame = 2;
                 }
             }
         }
     }
-}
+
