@@ -17,7 +17,7 @@ public class Level extends Model {
 
     public static int KEY_FRAME_FREQUENCY=5;
     public static int TOTAL_KEY_FRAMES=5;
-    public static int RESOLUTION=31;//number of vertices in a circle around the pipe
+    public static int RESOLUTION=4;//number of vertices in a circle around the pipe
 
     float t=0;
 
@@ -39,10 +39,11 @@ public class Level extends Model {
         int c1=0;
         for(int i=0;i<res;i++)
         {
-            this.xyz[c1]=(float)(0.5*Math.cos(2*3.1416*i/(res-1)-3.1416/2));c1+=1;
-            this.xyz[c1]=(float)(0.5*Math.sin(2*3.1416*i/(res-1)-3.1416/2));c1+=1;
+            this.xyz[c1]=(float)(2*Math.cos(2*3.1416*i/(res-1)-3.1416/2));c1+=1;
+            this.xyz[c1]=(float)(8*Math.sin(2*3.1416*i/(res-1)-3.1416/2));c1+=1;
             this.xyz[c1]=0;c1+=1;
         }
+
 
         //create a fixed list of triangles and UV map for the path object
         this.uv=new float[2*res*2];
@@ -64,8 +65,8 @@ public class Level extends Model {
             }
 
         path_maker=new ObjectMaker();
-        side_texture=new Texture("textures/box.png");
-        path_texture=new Texture("textures/metal.jpg");
+        side_texture=new Texture("textures/stone.png");
+        path_texture=new Texture("textures/stone.png");
         planet_texture=new Texture("textures/planet_3_d.jpg");
 
         segments=new LevelSegment[KEY_FRAME_FREQUENCY*TOTAL_KEY_FRAMES];
@@ -87,9 +88,12 @@ public class Level extends Model {
 
         //Only move if the left joystick is pressed
         if(J4Q.leftController.joystick.getX() < 0)
-            t-=2.5f*J4Q.activity.perSec();
+            t+=2.5f*J4Q.perSec();
+        /*
         else if(J4Q.leftController.joystick.getX() > 0)
-            t+=2.5f*J4Q.activity.perSec();
+            t-=2.5f*J4Q.activity.perSec();
+            */
+
         
 
         int i=(int)Math.floor(t/LevelSegment.LENGTH);
@@ -132,7 +136,7 @@ public class Level extends Model {
 
 
         transform.identity();
-        transform.translate(0,-1.5f,0);
+        transform.translate(0,-5f,0);
         //renderer.view.rotate(angle,0,0,1);
         transform.multiply(m);
     }

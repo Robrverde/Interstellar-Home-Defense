@@ -3,6 +3,7 @@ package com.example.j4q;
 import android.opengl.Matrix;
 
 import edu.ufl.digitalworlds.j4q.J4Q;
+import edu.ufl.digitalworlds.j4q.geometry.Position;
 import edu.ufl.digitalworlds.j4q.models.Mesh;
 import edu.ufl.digitalworlds.j4q.models.Model;
 import edu.ufl.digitalworlds.j4q.models.ObjectMaker;
@@ -27,6 +28,7 @@ public class LevelSegment extends Model {
 
     Level level;
 
+
     float[] orientation1;
     float[] orientation2;
     float[] rot;
@@ -34,11 +36,11 @@ public class LevelSegment extends Model {
     public LevelSegment(Level level){
         this.level=level;
 
-        spaceship=new Spaceship((int)Math.floor(Math.random()*Spaceship.TYPES));
-        appendChild(spaceship);
-        spaceship.transform.translate((float)(Math.random()*6-3),2.5f,0);
-        spaceship.transform.scale(0.2f);
-        spaceship.transform.rotateY(180);
+            spaceship = new Spaceship((int) Math.floor(35));
+            appendChild(spaceship);
+            spaceship.transform.translate((float) (Math.random() * 20 - 3), -8.5f, -100);
+            spaceship.transform.scale(2);
+            spaceship.transform.rotateY(180);
     }
 
     private void buildSides(){
@@ -140,11 +142,12 @@ public class LevelSegment extends Model {
             for(int i=0;i<20;i++){
                 om.save();
                 om.rotateZ((float)(Math.random()*360));
-                om.translate(0,(float)(8+Math.random()*8),(float)(Math.random()*LENGTH-LENGTH/2));
-                om.rotateY((float)(Math.random()*360));
-                om.rotateX((float)(Math.random()*180));
-                om.scale((float)(Math.random()*0.5+0.5));
-                om.sphere(1,1,1,5);
+                om.translate(50,0, 10);
+                //om.translate(10,(float)(8+Math.random()*1),(float)(Math.random()*LENGTH-LENGTH/2));
+                //om.rotateY((float)(Math.random()*360));
+                //om.rotateX((float)(Math.random()*180));
+                om.scale((float)(Math.random()*1+0.5));
+                om.sphere(2,1,2,5);
                 om.restore();
             }
             planets=om.flushShadedTexturedModel();
@@ -224,18 +227,21 @@ public class LevelSegment extends Model {
         level.path_maker.appendUV(this.level.uv);
 
 
-        buildSides();
-        buildPlanets();
+        //buildSides();
+        //buildPlanets();
 
         //reposition spaceship
+
+        /*
+
         if(spaceship.getParent()==null) {
             appendChild(spaceship);
         }
         spaceship.transform.identity();
-        spaceship.transform.translate((float)(Math.random()*6-3),2.5f,0);
-        spaceship.transform.scale(0.2f);
+        spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+        spaceship.transform.scale(2);
         spaceship.transform.rotateY(180);
-
+*/
 
 
 
@@ -262,22 +268,47 @@ public class LevelSegment extends Model {
             level.path_maker_orientation=null;
         }
 
-
-
-
-
-
     }
+
+    int frame = 0;
+    int enemyLocation = 0;
 
     @Override
-    public void Update(){
+    public void Update()
+    {
 
-        if(planets!=null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
+        if(MainActivity.wave > 0 && !MainActivity.game_over) {
+            if(enemyLocation == 1) {
+                enemyLocation = 0;
+                spaceship.transform.translate(-200, -200, -200);
+            }
+            frame += 1;
+        } else if((MainActivity.wave == 0 & enemyLocation == 0) || (MainActivity.game_over & enemyLocation == 0)){
+            enemyLocation = 1;
+            frame = 0;
+            spaceship.transform.translate(200,200,200);
+        }
 
-        if(spaceship!=null)spaceship.transform.translate(0,0,-1.5f*J4Q.perSec());
+        //if(planets != null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
 
+
+
+        if (frame > 1) {//FYI: In the first frame we do not have accurate globalTransform
+            if(spaceship != null){
+                spaceship.transform.translate(0,0,-3*J4Q.perSec());
+            }
+            //Position p = spaceship.globalTransform.getPosition();
+            //float d = p.distance(p);
+
+            if (frame > 1000 && spaceship != null) {
+
+                spaceship.transform.identity();
+                spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
+                spaceship.transform.rotateY(180);
+                frame = 2;
+            }
+        }
 
     }
-
-
 }
+
