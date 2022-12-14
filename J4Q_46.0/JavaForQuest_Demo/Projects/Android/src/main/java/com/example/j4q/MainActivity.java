@@ -55,7 +55,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
         soundPlayer = new SoundPlayer(this);
 
-        if (wave == 1) {
+        if (wave == 0) {
             time = 20000;
             startTimer();
         }
@@ -80,8 +80,22 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         // 24 hrs = 86400000 milliseconds.
         // 1 hr = 3600000 milliseconds.
         // 1 min = 60000 milliseconds.
+        if (wave == 0) {
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+                }
 
-        if (wave == 1) {
+                public void onFinish() {
+                    stopTimer();
+                    wave = 1;
+                    time = 20000;
+                    startTimer();
+
+                }
+            }.start();
+        }
+        else if (wave == 1) {
             // PHASE 2: Check if Critter is still thriving
             countDownTimer = new CountDownTimer((time), 1000) {
                 public void onTick(long time) {
@@ -89,7 +103,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 }
 
                 public void onFinish() {
-                    wave = 2;
                     stopTimer();
                 }
             }.start();
@@ -200,7 +213,11 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
        */
 
         //t.setText(timer + " " + Integer.toString(high_score));
-        if (wave == 1) {
+        if(wave == 0)
+        {
+            timer_text.setText("Game Starts in " + timeLeft);
+        }
+        else if (wave == 1) {
             timer_text.setText(timer + timeLeft);
         }
 
