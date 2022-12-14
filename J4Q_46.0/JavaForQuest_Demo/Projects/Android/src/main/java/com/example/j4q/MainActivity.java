@@ -26,7 +26,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     Paint white_text;
 
-    public static int wave = 1;
+    public static int wave = 0;
     public long time = 0;
     private CountDownTimer countDownTimer;
     public boolean timerStopped;
@@ -34,6 +34,10 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     String timer = "Remaining Time: ";
     String score = "Score: ";
+
+    String title = "Welcome to Interstellar Home Defense!";
+    String rules = "Defeat as many enemies as you can before the";
+    String rules2 = "timer runs out.";
 
     boolean wasLeftProjectileShot = false;
     boolean wasRightProjectileShot = false;
@@ -123,9 +127,16 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     Level my_level;
     Model earth;
     Model moon;
+
+    Model title_rect;
+    Model rules_rect;
+    Model rules2_rect;
     Model timer_rect;
     Model score_rect;
 
+    Text title_text;
+    Text rules_text;
+    Text rules2_text;
     Text timer_text;
     Text score_text;
 
@@ -157,6 +168,33 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         my_level.prependChild(moon);
         moon.transform.translate(320,0,-20);
 
+        //Make rectangle for the title
+        om.rectangle(500, 25);
+        title_rect = om.flushShadedTexturedModel();
+        title_text =new Text(500,25);//size of the texture in pixels
+        title_text.setText(title);
+        ((ShadedTextureShader) title_rect.shader).setTexture(title_text);
+        my_level.prependChild(title_rect);
+        title_rect.transform.translate(100, 160, -400);
+
+        //Make rectangle for the rules
+        om.rectangle(500, 25);
+        rules_rect = om.flushShadedTexturedModel();
+        rules_text =new Text(500,25);//size of the texture in pixels
+        rules_text.setText(rules);
+        ((ShadedTextureShader) rules_rect.shader).setTexture(rules_text);
+        my_level.prependChild(rules_rect);
+        rules_rect.transform.translate(80, 120, -400);
+
+        //Make rectangle for the rules part 2
+        om.rectangle(500, 25);
+        rules2_rect = om.flushShadedTexturedModel();
+        rules2_text =new Text(500,25);//size of the texture in pixels
+        rules2_text.setText(rules2);
+        ((ShadedTextureShader) rules2_rect.shader).setTexture(rules2_text);
+        my_level.prependChild(rules2_rect);
+        rules2_rect.transform.translate(80, 80, -400);
+
         //Make rectangle for the timer
         om.rectangle(500, 25);
         timer_rect = om.flushShadedTexturedModel();
@@ -173,7 +211,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         score_text.setText(score);
         ((ShadedTextureShader) score_rect.shader).setTexture(score_text);
         my_level.prependChild(score_rect);
-        score_rect.transform.translate(200, 0, -400);
+        score_rect.transform.translate(250, 0, -400);
 
         background=new Background360();
         background.setTexture(new Texture(this,"textures/pano.jpg"));
@@ -218,6 +256,9 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             timer_text.setText("Game Starts in " + timeLeft);
         }
         else if (wave == 1) {
+            title_text.setText("");
+            rules_text.setText("");
+            rules2_text.setText("");
             timer_text.setText(timer + timeLeft);
         }
 
