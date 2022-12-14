@@ -277,12 +277,13 @@ public class LevelSegment extends Model {
 
         if(MainActivity.wave > 0 && !MainActivity.game_over) {
             if(enemyLocation == 1) {
-                enemyLocation = 2;
+                enemyLocation = 0;
                 spaceship.transform.translate(-200, -200, -200);
             }
             frame += 1;
-        } else if((MainActivity.wave == 0 & enemyLocation == 0) || MainActivity.game_over){
+        } else if((MainActivity.wave == 0 & enemyLocation == 0) || (MainActivity.game_over & enemyLocation == 0)){
             enemyLocation = 1;
+            frame = 0;
             spaceship.transform.translate(200,200,200);
         }
 
