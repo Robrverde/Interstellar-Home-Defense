@@ -232,6 +232,8 @@ public class LevelSegment extends Model {
 
         //reposition spaceship
 
+        /*
+
         if(spaceship.getParent()==null) {
             appendChild(spaceship);
         }
@@ -239,7 +241,7 @@ public class LevelSegment extends Model {
         spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
         spaceship.transform.scale(2);
         spaceship.transform.rotateY(180);
-
+*/
 
 
 
@@ -303,7 +305,6 @@ public class LevelSegment extends Model {
                 spaceship.transform.identity();
                 spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
                 spaceship.transform.rotateY(180);
-                spaceship.transform.scale(+1);
                 frame = 2;
             }
         }

@@ -45,6 +45,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     public static boolean game_over = false;
 
     public static int high_score = 0;
+    public static int current_score = 0;
     public static long timeLeft = 0;
 
     //MediaPlayer mp;
@@ -349,22 +350,24 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         //Displas messages on screen
         if(game_over)
         {
+            if (current_score > high_score){ high_score = current_score;}
             timer_text.setText(gameover);
             score_text.setText("High score: " + high_score);
+            current_score = 0;
         }
         else
         {
             if(wave == 0)
             {
                 timer_text.setText("Game Starts in " + timeLeft);
-                score_text.setText(score + high_score);
+                score_text.setText("High score: " + high_score);
             }
             else if (wave == 1) {
                 title_text.setText("");
                 rules_text.setText("");
                 rules2_text.setText("");
                 timer_text.setText(timer + timeLeft);
-                score_text.setText(score + high_score);
+                score_text.setText(score + current_score);
             }
         }
 
@@ -379,6 +382,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             projectile[next_projectile].transform.reset();
             projectile[next_projectile].transform.translate(J4Q.rightController.aim.position);
             projectile[next_projectile].transform.rotate(J4Q.rightController.aim.orientation);
+            projectile[next_projectile].transform.scale(2);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
 
@@ -397,6 +401,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
             projectile[next_projectile].transform.reset();
             projectile[next_projectile].transform.translate(J4Q.leftController.aim.position);
             projectile[next_projectile].transform.rotate(J4Q.leftController.aim.orientation);
+            projectile[next_projectile].transform.scale(2);
             projectile[next_projectile].transform.translate(0,0,-0.1f);
             next_projectile+=1;
 
