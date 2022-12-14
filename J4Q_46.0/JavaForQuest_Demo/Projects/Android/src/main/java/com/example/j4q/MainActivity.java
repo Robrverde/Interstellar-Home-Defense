@@ -86,6 +86,88 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         // 24 hrs = 86400000 milliseconds.
         // 1 hr = 3600000 milliseconds.
         // 1 min = 60000 milliseconds.
+
+        /*
+        if(game_over)
+        {
+            timer_text.setText(gameover);
+            score_text.setText("High score: " + high_score);
+        }
+        else
+        {
+            if(wave == 0)
+            {
+                timer_text.setText("Game Starts in " + timeLeft);
+                score_text.setText(score + high_score);
+            }
+            else if (wave == 1) {
+                title_text.setText("");
+                rules_text.setText("");
+                rules2_text.setText("");
+                timer_text.setText(timer + timeLeft);
+                score_text.setText(score + high_score);
+            }
+        }
+
+                if (wave == 0) {
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+                    timer_text.setText("Game Starts in " + timeLeft);
+                    score_text.setText(score + high_score);
+                }
+
+                public void onFinish() {
+                    stopTimer();
+                    wave = 1;
+                    time = 15000;
+                    title_text.setText("");
+                    rules_text.setText("");
+                    rules2_text.setText("");
+                    startTimer();
+
+                }
+            }.start();
+        }
+        else if (game_over) {
+            // PHASE 2: Check if Critter is still thriving
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+                }
+
+                public void onFinish() {
+                    stopTimer();
+                    game_over = false;
+                    timer_text.setText(gameover);
+                    score_text.setText("High score: " + high_score);
+                    startTimer();
+                    wave = 0;
+                }
+            }.start();
+        }
+        else if (wave == 1) {
+            // PHASE 2: Check if Critter is still thriving
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+
+                    timer_text.setText(timer + timeLeft);
+                    score_text.setText(score + high_score);
+                }
+
+                public void onFinish() {
+                    stopTimer();
+                    time = 12000;
+                    game_over = true;
+                    startTimer();
+                }
+            }.start();
+        }
+    }
+
+         */
+
         if (wave == 0) {
             countDownTimer = new CountDownTimer((time), 1000) {
                 public void onTick(long time) {
@@ -101,8 +183,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
                 }
             }.start();
         }
-        else if (wave == 1) {
-            // PHASE 2: Check if Critter is still thriving
+        else if (game_over) {
             countDownTimer = new CountDownTimer((time), 1000) {
                 public void onTick(long time) {
                     timeLeft = time / 1000;
@@ -110,7 +191,24 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
                 public void onFinish() {
                     stopTimer();
+                    game_over = false;
+                    wave = 0;
+                    startTimer();
+
+                }
+            }.start();
+        }
+        else if (wave == 1) {
+            countDownTimer = new CountDownTimer((time), 1000) {
+                public void onTick(long time) {
+                    timeLeft = time / 1000;
+                }
+
+                public void onFinish() {
+                    stopTimer();
+                    time = 6000;
                     game_over = true;
+                    startTimer();
                 }
             }.start();
         }
@@ -272,7 +370,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
         frame+=1;
 
-        earth.transform.rotateY(-2*J4Q.perSec());
 
         //Trigger projectile from the right controller
         if(J4Q.rightController.trigger.currentState && J4Q.rightController.trigger.changedSinceLastSync){
