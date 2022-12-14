@@ -36,7 +36,7 @@ public class LevelSegment extends Model {
     public LevelSegment(Level level){
         this.level=level;
 
-            spaceship = new Spaceship((int) Math.floor(Math.random() * Spaceship.TYPES));
+            spaceship = new Spaceship((int) Math.floor(35));
             appendChild(spaceship);
             spaceship.transform.translate((float) (Math.random() * 20 - 3), -8.5f, -100);
             spaceship.transform.scale(2);

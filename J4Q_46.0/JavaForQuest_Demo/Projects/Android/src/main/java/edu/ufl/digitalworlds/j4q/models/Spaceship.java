@@ -1716,6 +1716,32 @@ else if(id==34){
             maker.translate(0f,.3f,-.6f);
             maker.rotateX(-.9f);
             maker.cone(.3f,.9f,.3f);
+        }else if(id==35) {
+
+            maker.color(0,0,0);
+            maker.sphere(1.25f,1.5f,1.25f);
+            maker.translate(0,-.5f,0);
+            maker.sphere(1.25f,1,1.25f);
+            maker.translate(0,.5f,.25f);
+
+            //eye
+            maker.translate(0,0,0);
+            maker.color(1,1,1);
+            maker.sphere(1f,1f,1f);
+            maker.rotateX(90f);
+            maker.translate(0,0.3f,0);
+            maker.color(0,0,0);
+            maker.cylinder(0.2f,.45f,0.2f);
+            maker.color(0,0,0);
+            maker.cylinder(0.5f,.35f,0.5f);
+            maker.color(1,0,0);
+            maker.cylinder(0.4f,.4f,0.4f);
+            maker.translate(0,-0.3f,0);
+
+            maker.translate(0,.3f,.5f);
+            maker.rotateZ(90f);
+            maker.color(1,1,1);
+            maker.cylinder(.1f,.5f,.2f);
         }
 
 
@@ -1752,6 +1778,7 @@ else if(id==34){
         else if(id==32){maker2.rotateY(-180/2f);}
         else if(id==33){maker2.rotateY(-180/2f);}
         else if(id==34){maker2.rotateY(180);}
+        else if(id==35){maker2.rotateY(180);}
 
         maker2.appendTriangles(maker.getTriangles());
         maker2.appendXYZ(maker.getXYZ());
