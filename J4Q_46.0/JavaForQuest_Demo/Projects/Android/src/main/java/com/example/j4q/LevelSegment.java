@@ -28,6 +28,7 @@ public class LevelSegment extends Model {
 
     Level level;
 
+
     float[] orientation1;
     float[] orientation2;
     float[] rot;
@@ -35,11 +36,11 @@ public class LevelSegment extends Model {
     public LevelSegment(Level level){
         this.level=level;
 
-        spaceship=new Spaceship((int)Math.floor(Math.random()*Spaceship.TYPES));
-        appendChild(spaceship);
-        spaceship.transform.translate((float)(Math.random()*20-3),-8.5f,-100);
-        spaceship.transform.scale(2);
-        spaceship.transform.rotateY(180);
+            spaceship = new Spaceship((int) Math.floor(Math.random() * Spaceship.TYPES));
+            appendChild(spaceship);
+            spaceship.transform.translate((float) (Math.random() * 20 - 3), -8.5f, -100);
+            spaceship.transform.scale(2);
+            spaceship.transform.rotateY(180);
     }
 
     private void buildSides(){
@@ -230,6 +231,7 @@ public class LevelSegment extends Model {
         //buildPlanets();
 
         //reposition spaceship
+
         if(spaceship.getParent()==null) {
             appendChild(spaceship);
         }
@@ -264,11 +266,6 @@ public class LevelSegment extends Model {
             level.path_maker_orientation=null;
         }
 
-
-
-
-
-
     }
 
     int frame = 0;
@@ -276,15 +273,21 @@ public class LevelSegment extends Model {
     @Override
     public void Update(){
 
-        frame += 1;
+        if(MainActivity.wave == 1){
+            frame += 1;
+        }else{
+            if(spaceship != null)spaceship.transform.translate(100,100,100);
+        }
 
-        if(planets != null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
+        //if(planets != null)planets.transform.rotateZ(planet_speed* J4Q.perSec());
 
-        if(spaceship != null)spaceship.transform.translate(0,0,-3*J4Q.perSec());
+
 
         if (frame > 1) {//FYI: In the first frame we do not have accurate globalTransform
+            if(spaceship != null)spaceship.transform.translate(0,0,-3*J4Q.perSec());
             //Position p = spaceship.globalTransform.getPosition();
             //float d = p.distance(p);
+
             if (frame > 1200 && spaceship != null) {
                 spaceship.transform.identity();
                 spaceship.transform.rotateY(180);
@@ -293,9 +296,5 @@ public class LevelSegment extends Model {
                 frame = 0;
             }
         }
-
-
     }
-
-
 }

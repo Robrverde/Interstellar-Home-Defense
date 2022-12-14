@@ -25,20 +25,12 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     Paint white_text;
 
-    public int wave = 1;
-    public long time = 0;
-    private CountDownTimer countDownTimer;
-    public boolean timerStopped;
-    SurfaceHolder holder=null;
-
-    String timer="Time Remaining: ";
-    String score = "Score: ";
+    String score = "High Score: ";
 
     boolean wasLeftProjectileShot = false;
     boolean wasRightProjectileShot = false;
 
     public static int high_score = 0;
-    public static long timeLeft = 0;
 
     //MediaPlayer mp;
     public static SoundPlayer soundPlayer;
@@ -46,7 +38,6 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //startTimer();
 
         white_text=new Paint();
         white_text.setColor(Color.WHITE);
@@ -54,68 +45,8 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
 
         soundPlayer = new SoundPlayer(this);
 
-        if (wave == 1) {
-            time = 20000;
-            startTimer();
-        }
     }
 
-    /** Starts the timer **/
-    public void startTimer() {
-        setTimerStartListener();
-        timerStopped = false;
-    }
-
-    /** Stop the timer **/
-    public void stopTimer() {
-        countDownTimer.cancel();
-        timerStopped = true;
-    }
-
-    /** Timer method: CountDownTimer **/
-    private void setTimerStartListener() {
-
-
-        // 24 hrs = 86400000 milliseconds.
-        // 1 hr = 3600000 milliseconds.
-        // 1 min = 60000 milliseconds.
-
-        if (wave == 1) {
-            // PHASE 2: Check if Critter is still thriving
-            countDownTimer = new CountDownTimer((time), 1000) {
-                public void onTick(long time) {
-                    timeLeft = time / 1000;
-                }
-
-                public void onFinish() {
-                    wave = 2;
-                    stopTimer();
-                }
-            }.start();
-        }
-
-
-                /*
-            } else if (Critter != 0 && Phase == 0) {
-                // PHASE 1: Critter grows from a seed and into a critter.
-                countDownTimer = new CountDownTimer((time), 1000) {
-                    public void onTick(long time) {
-                        timeLeft.setText("Seconds remaining: " + time / 1000);
-                        remainingTime = time;
-                    }
-
-                    public void onFinish() {
-                        stopTimer();
-                        Phase = 1;
-                        time = 5000;
-                        spawnCheck();
-                    }
-                }.start();
-            }else {
-                spawnCheck();
-            }
-            */
-    }
     ///////////////////////////////////////
     RightController rc;
     LeftController lc;
@@ -128,12 +59,9 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
     Background360 background;
 
     Level my_level;
-    Model earth;
-    Model moon;
-    Model timer_rect;
+    Model trees;
     Model score_rect;
 
-    Text timer_text;
     Text score_text;
 
     public void Start(){
@@ -145,33 +73,27 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
         my_level=new Level();
         scene.appendChild(my_level);
 
-        //Make the earth
         ObjectMaker om=new ObjectMaker();
-        om.sphere(320,320,320,32);
-        earth=om.flushShadedTexturedModel();
-        ((ShadedTextureShader)earth.shader).setTexture(new Texture(this,"textures/earth_1024.jpg"));
-        ((ShadedTextureShader)earth.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        //appendChild(earth);
-        my_level.prependChild(earth);
-        earth.transform.translate(-320,0,-20);
 
-        //Make the moon
-        om.sphere(80,80,80,32);
-        moon=om.flushShadedTexturedModel();
-        ((ShadedTextureShader)moon.shader).setTexture(new Texture(this,"textures/moon_1024.jpg"));
-        ((ShadedTextureShader)moon.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
-        //appendChild(moon);
-        my_level.prependChild(moon);
-        moon.transform.translate(320,0,-20);
+        //trees
 
-        //Make rectangle for the timer
-        om.rectangle(500, 25);
-        timer_rect = om.flushShadedTexturedModel();
-        timer_text =new Text(500,25);//size of the texture in pixels
-        timer_text.setText(timer);
-        ((ShadedTextureShader) timer_rect.shader).setTexture(timer_text);
-        my_level.prependChild(timer_rect);
-        timer_rect.transform.translate(200, 40, -400);
+        /*
+        for(int i=0;i<30;i++) {
+
+            //pick a random spot around the house
+            float x = (float) Math.random() * 2 - 1;
+            x = Math.signum(x) + x * 1.5f;
+            float z = (float) Math.random() * 2 - 1;
+            z = Math.signum(z) + z * 1.5f;
+*/
+        om.identity();//resets the coordinate system
+        om.translate(10, 10, 10);//go to the randomly selected spot
+        om.color(101 / 255f, 67 / 255f, 33 / 255f);//brown color
+        om.cylinderY(15, 5, 15, 32);
+        om.translate(0, 5, 0);
+        om.color(0, 0.5f, 0);//dark green color
+        om.sphere(5f, 1, 5f, 32);
+        //}
 
         //Make rectangle for the score
         om.rectangle(500, 25);
@@ -212,20 +134,9 @@ public class GameActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     public  void Update(){
 
-        //Had to comment it out as it was breaking the projectiles
-       /*
-       if(holder==null)return;
-       Canvas c=holder.lockCanvas();
-       c.drawText(timer, 20, c.getHeight()-20, white_text);
-       */
-
-        //t.setText(timer + " " + Integer.toString(high_score));
-        timer_text.setText(timer + timeLeft);
         score_text.setText(score + high_score);
 
         frame+=1;
-
-        earth.transform.rotateY(-2*J4Q.perSec());
 
         //Trigger projectile from the right controller
         if(J4Q.rightController.trigger.currentState && J4Q.rightController.trigger.changedSinceLastSync){
