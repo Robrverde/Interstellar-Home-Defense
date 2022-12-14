@@ -252,22 +252,24 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
         //Make the earth
         ObjectMaker om=new ObjectMaker();
-        om.sphere(320,320,320,32);
+        om.box(3,3,3);
         earth=om.flushShadedTexturedModel();
         ((ShadedTextureShader)earth.shader).setTexture(new Texture(this,"textures/earth_1024.jpg"));
-        ((ShadedTextureShader)earth.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
+        ((ShadedTextureShader)earth.shader).setAmbientColor(new float[]{0.2f,0.2f,0.2f});
         //appendChild(earth);
         my_level.prependChild(earth);
-        earth.transform.translate(-320,0,-20);
+        earth.transform.translate(10,-2,-2);
 
         //Make the moon
-        om.sphere(80,80,80,32);
+        om.pyramid (3,2,3);
         moon=om.flushShadedTexturedModel();
         ((ShadedTextureShader)moon.shader).setTexture(new Texture(this,"textures/moon_1024.jpg"));
-        ((ShadedTextureShader)moon.shader).setAmbientColor(new float[]{0.02f,0.02f,0.02f});
+        ((ShadedTextureShader)moon.shader).setAmbientColor(new float[]{0.2f,0.2f,0.2f});
         //appendChild(moon);
         my_level.prependChild(moon);
-        moon.transform.translate(320,0,-20);
+        moon.transform.translate(10,-.5f,-2);
+
+
 
         //Make rectangle for the title
         om.rectangle(500, 25);
@@ -369,7 +371,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
 
         frame+=1;
-
 
         //Trigger projectile from the right controller
         if(J4Q.rightController.trigger.currentState && J4Q.rightController.trigger.changedSinceLastSync){
