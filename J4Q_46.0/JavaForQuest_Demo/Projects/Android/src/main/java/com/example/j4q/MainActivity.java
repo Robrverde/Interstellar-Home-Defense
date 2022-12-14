@@ -38,9 +38,11 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     String title = "Welcome to Interstellar Home Defense!";
     String rules = "Defeat as many enemies as you can before the";
     String rules2 = "timer runs out.";
+    String gameover = "Times up. Thank you for playing!";
 
     boolean wasLeftProjectileShot = false;
     boolean wasRightProjectileShot = false;
+    public static boolean game_over = false;
 
     public static int high_score = 0;
     public static long timeLeft = 0;
@@ -108,6 +110,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
                 public void onFinish() {
                     stopTimer();
+                    game_over = true;
                 }
             }.start();
         }
@@ -243,26 +246,29 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     public  void Update(){
 
-        //Had to comment it out as it was breaking the projectiles
-       /*
-       if(holder==null)return;
-       Canvas c=holder.lockCanvas();
-       c.drawText(timer, 20, c.getHeight()-20, white_text);
-       */
-
-        //t.setText(timer + " " + Integer.toString(high_score));
-        if(wave == 0)
+        //Displas messages on screen
+        if(game_over)
         {
-            timer_text.setText("Game Starts in " + timeLeft);
+            timer_text.setText(gameover);
+            score_text.setText("High score: " + high_score);
         }
-        else if (wave == 1) {
-            title_text.setText("");
-            rules_text.setText("");
-            rules2_text.setText("");
-            timer_text.setText(timer + timeLeft);
+        else
+        {
+            if(wave == 0)
+            {
+                timer_text.setText("Game Starts in " + timeLeft);
+                score_text.setText(score + high_score);
+            }
+            else if (wave == 1) {
+                title_text.setText("");
+                rules_text.setText("");
+                rules2_text.setText("");
+                timer_text.setText(timer + timeLeft);
+                score_text.setText(score + high_score);
+            }
         }
 
-        score_text.setText(score + high_score);
+
 
         frame+=1;
 
