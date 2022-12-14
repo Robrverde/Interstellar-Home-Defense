@@ -1,15 +1,10 @@
 package com.example.j4q;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.SurfaceHolder;
-
-import com.oculus.sdk.xrcompositor.R;
 import edu.ufl.digitalworlds.j4q.J4Q;
 import edu.ufl.digitalworlds.j4q.activities.QuestActivity;
 import edu.ufl.digitalworlds.j4q.geometry.Position;
@@ -30,7 +25,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     public long time = 0;
     private CountDownTimer countDownTimer;
     public boolean timerStopped;
-    SurfaceHolder holder=null;
 
     String timer = "Remaining Time: ";
     String score = "Score: ";
@@ -54,7 +48,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //startTimer();
 
         white_text=new Paint();
         white_text.setColor(Color.WHITE);
@@ -87,87 +80,6 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
         // 24 hrs = 86400000 milliseconds.
         // 1 hr = 3600000 milliseconds.
         // 1 min = 60000 milliseconds.
-
-        /*
-        if(game_over)
-        {
-            timer_text.setText(gameover);
-            score_text.setText("High score: " + high_score);
-        }
-        else
-        {
-            if(wave == 0)
-            {
-                timer_text.setText("Game Starts in " + timeLeft);
-                score_text.setText(score + high_score);
-            }
-            else if (wave == 1) {
-                title_text.setText("");
-                rules_text.setText("");
-                rules2_text.setText("");
-                timer_text.setText(timer + timeLeft);
-                score_text.setText(score + high_score);
-            }
-        }
-
-                if (wave == 0) {
-            countDownTimer = new CountDownTimer((time), 1000) {
-                public void onTick(long time) {
-                    timeLeft = time / 1000;
-                    timer_text.setText("Game Starts in " + timeLeft);
-                    score_text.setText(score + high_score);
-                }
-
-                public void onFinish() {
-                    stopTimer();
-                    wave = 1;
-                    time = 15000;
-                    title_text.setText("");
-                    rules_text.setText("");
-                    rules2_text.setText("");
-                    startTimer();
-
-                }
-            }.start();
-        }
-        else if (game_over) {
-            // PHASE 2: Check if Critter is still thriving
-            countDownTimer = new CountDownTimer((time), 1000) {
-                public void onTick(long time) {
-                    timeLeft = time / 1000;
-                }
-
-                public void onFinish() {
-                    stopTimer();
-                    game_over = false;
-                    timer_text.setText(gameover);
-                    score_text.setText("High score: " + high_score);
-                    startTimer();
-                    wave = 0;
-                }
-            }.start();
-        }
-        else if (wave == 1) {
-            // PHASE 2: Check if Critter is still thriving
-            countDownTimer = new CountDownTimer((time), 1000) {
-                public void onTick(long time) {
-                    timeLeft = time / 1000;
-
-                    timer_text.setText(timer + timeLeft);
-                    score_text.setText(score + high_score);
-                }
-
-                public void onFinish() {
-                    stopTimer();
-                    time = 12000;
-                    game_over = true;
-                    startTimer();
-                }
-            }.start();
-        }
-    }
-
-         */
 
         if (wave == 0) {
             countDownTimer = new CountDownTimer((time), 1000) {
