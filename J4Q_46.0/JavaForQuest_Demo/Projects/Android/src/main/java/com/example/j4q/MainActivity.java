@@ -26,7 +26,7 @@ public class MainActivity extends QuestActivity implements SurfaceHolder.Callbac
 
     Paint white_text;
 
-    public static int wave = 0;
+    public static int wave = 1;
     public long time = 0;
     private CountDownTimer countDownTimer;
     public boolean timerStopped;
